@@ -6,29 +6,37 @@ $html = file_get_contents('index.html');
 $dom->loadHTMLFile('index.html');
 
 $imgList = $dom->getElementsByTagName('img');
-$btnPhp = $dom->getElementById('link_btn_php');
-$btnJs = $dom->getElementById('link_btn_js');
 
-foreach ($imgList as $image) {
-    $hrefAttr = $image->getAttribute('src');
-    $altAttr = $image->getAttribute('alt');
-    $widthAttr = $image->getAttribute('width');
+if (isset($imgList)) 
+{
+    $btnPhp = $dom->getElementById('link_btn_php');
+    $btnJs = $dom->getElementById('link_btn_js');
 
-    $newImg = $dom->createElement('img');
-    $newImg->setAttribute('src', $hrefAttr);
-    $newImg->setAttribute('alt', $altAttr);
-    $newImg->setAttribute('width', $widthAttr);
+    foreach ($imgList as $image) {
+        $hrefAttr = $image->getAttribute('src');
+        $altAttr = $image->getAttribute('alt');
+        $widthAttr = $image->getAttribute('width');
 
-    $wrapper = $dom->createElement('a');
-    $wrapper->setAttribute('href', $hrefAttr);
-    $wrapper->setAttribute('target', '_blank');
+        $newImg = $dom->createElement('img');
+        $newImg->setAttribute('src', $hrefAttr);
+        $newImg->setAttribute('alt', $altAttr);
+        $newImg->setAttribute('width', $widthAttr);
 
-    $wrapper->append($newImg);
+        $wrapper = $dom->createElement('a');
+        $wrapper->setAttribute('href', $hrefAttr);
+        $wrapper->setAttribute('target', '_blank');
 
-    $image->replaceWith($wrapper);
+        $wrapper->append($newImg);
+
+        $image->replaceWith($wrapper);
+    }
+
+    $btnPhp->setAttribute('class', 'btn btn-outline-primary disabled');
+    $btnJs->setAttribute('disabled', '');
+
+    echo $dom->saveHTML();
 }
-
-$btnPhp->setAttribute('class', 'btn btn-outline-primary disabled');
-$btnJs->setAttribute('disabled', '');
-
-echo $dom->saveHTML();
+else
+{
+    echo $dom->saveHTML();
+}
